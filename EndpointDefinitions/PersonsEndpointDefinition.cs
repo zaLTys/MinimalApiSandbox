@@ -9,42 +9,52 @@ namespace MinimalApiSandbox.EndpointDefinitions
     {
         public void DefineServices(IServiceCollection services)
         {
-            services.AddSingleton<PersonsRepository>();
+            services.AddSingleton<IPersonsRepository, PersonsRepository>();
         }
 
         public void DefineEndpoints(WebApplication app)
         {
-            app.MapGet("/persons", async ([FromServices] PersonsRepository repo) => await repo.GetAllAsync());
+            app.MapGet("/persons", GetAllAsync);
+            app.MapGet("/persons/{id}", GetByIdAsync);
+            app.MapPost("/persons", CreateAsync);
+            app.MapPut("/persons/{id}", UpdateAsync);
+            app.MapDelete("/persons/{id}", DeleteAsync);
+        }
 
-            app.MapGet("/persons/{id}", async ([FromServices] PersonsRepository repo, Guid id) =>
+        internal async Task<IResult> GetAllAsync(IPersonsRepository repo)
+        {
+            var result = await repo.GetAllAsync();
+            return Results.Ok(result);
+        }
+
+        internal async Task<IResult> GetByIdAsync(IPersonsRepository repo, Guid id)
+        {
+            var person = await repo.GetByIdAsync(id);
+            return person is not null ? Results.Ok(person) : Results.NotFound();
+        }
+
+        internal async Task<IResult> CreateAsync(IPersonsRepository repo, Person person)
+        {
+            await repo.CreateAsync(person);
+            return Results.Created($"/persons/{person.Id}", person);
+        }
+
+        internal async Task<IResult> UpdateAsync(IPersonsRepository repo, Guid id, Person updatedPerson)
+        {
+            var person = await repo.GetByIdAsync(id);
+            if (person is null)
             {
-                var person = await repo.GetByIdAsync(id);
-                return person is not null ? Results.Ok(person) : Results.NotFound();
-            });
+                return Results.NotFound();
+            }
 
-            app.MapPost("/persons", async ([FromServices] PersonsRepository repo, Person person) =>
-            {
-                await repo.CreateAsync(person);
-                return Results.Created($"/persons/{person.Id}", person);
-            });
+            await repo.UpdateAsync(id, updatedPerson);
+            return Results.Ok(updatedPerson);
+        }
 
-            app.MapPut("/persons/{id}", async ([FromServices] PersonsRepository repo, Guid id, Person updatedPerson) =>
-            {
-                var person = await repo.GetByIdAsync(id);
-                if (person is null)
-                {
-                    return Results.NotFound();
-                }
-
-                await repo.UpdateAsync(id, updatedPerson);
-                return Results.Ok(updatedPerson);
-            });
-
-            app.MapDelete("/persons/{id}", async ([FromServices] PersonsRepository repo, Guid id) =>
-            {
-                await repo.Delete(id);
-                return Results.Ok();
-            });
+        internal async Task<IResult> DeleteAsync(IPersonsRepository repo, Guid id)
+        {
+            await repo.Delete(id);
+            return Results.Ok();
         }
     }
 }

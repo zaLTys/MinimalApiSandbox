@@ -2,7 +2,7 @@ using MinimalApiSandbox.Model;
 
 namespace MinimalApiSandbox.Repositories;
 
-class PersonsRepository
+class PersonsRepository : IPersonsRepository
 {
     private readonly Dictionary<Guid, Person> _persons = new();
     public Task<bool> CreateAsync(Person? person)

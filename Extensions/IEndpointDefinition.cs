@@ -2,7 +2,7 @@
 {
     public interface IEndpointDefinition
     {
-        void DefineServices(IServiceCollection services);
         void DefineEndpoints(WebApplication app);
+        void DefineServices(IServiceCollection services);
     }
 }

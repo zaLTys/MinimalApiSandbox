@@ -1,3 +1,7 @@
+using MinimalApiSandbox.Model;
+
+namespace MinimalApiSandbox.Repositories;
+
 class PersonsRepository
 {
     private readonly Dictionary<Guid, Person> _persons = new();

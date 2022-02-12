@@ -10,14 +10,18 @@ namespace MinimalApiSandbox.Services
     public class NethereumService : INethereumService
     {
         private readonly string _path;
+        private readonly Web3 _web3;
 
         public NethereumService(IConfiguration config)
         {
-            _path = config.GetSection("WorkingDirectory").Value;
+            _path = config.GetSection(AppConfiguration.WorkingDirectory).Value;
+            _web3 = new Web3(config.GetSection(AppConfiguration.NetworkUrl).Value);
+            
         }
 
         public async Task<string> CreateWalletAsync(string password)
         {
+            FileHelper.CheckDirectory(_path);
             Wallet wallet = new Wallet(Wordlist.English, WordCount.Twelve);
             string words = string.Join(" ", wallet.Words);
             string fileName = string.Empty;
@@ -41,6 +45,7 @@ namespace MinimalApiSandbox.Services
         {
             try
             {
+                FileHelper.CheckDirectory(_path);
                 var wallet = FileHelper.LoadWalletFromJsonFile(nameOfWalletFile, _path, pass);
                 return await Task.FromResult(wallet);
             }
@@ -55,6 +60,7 @@ namespace MinimalApiSandbox.Services
         {
             try
             {
+                FileHelper.CheckDirectory(_path);
                 var wallet = FileHelper.LoadWalletFromJsonFile(nameOfWalletFile, _path, pass);
                 var result = new Dictionary<string, string>();
 
@@ -75,6 +81,7 @@ namespace MinimalApiSandbox.Services
 
         public async Task<string> GetBalanceAsync() //test
         {
+            //Todo: update to use Ropsten
             var web3 = new Web3("https://mainnet.infura.io/v3/7238211010344719ad14a89db874158c");
             var balance = await web3.Eth.GetBalance.SendRequestAsync("0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae");
             Console.WriteLine($"Balance in Wei: {balance.Value}");

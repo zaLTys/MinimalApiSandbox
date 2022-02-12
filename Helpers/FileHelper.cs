@@ -51,5 +51,18 @@ namespace MinimalApiSandbox.Helpers
             Console.WriteLine();
             return wallet;
         }
+
+        public static void CheckDirectory(string path)
+        {
+            try
+            {
+                Directory.CreateDirectory(path);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+        }
     }
 }

@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MinimalApiSandbox.Extensions;
-using MinimalApiSandbox.Model;
+﻿using MinimalApiSandbox.Extensions;
+using MinimalApiSandbox.Models;
 using MinimalApiSandbox.Repositories;
 
 namespace MinimalApiSandbox.EndpointDefinitions

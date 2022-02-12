@@ -1,4 +1,4 @@
-using MinimalApiSandbox.Model;
+using MinimalApiSandbox.Models;
 
 namespace MinimalApiSandbox.Repositories;
 

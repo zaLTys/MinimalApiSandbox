@@ -1,5 +1,5 @@
 using MinimalApiSandbox.Extensions;
-using MinimalApiSandbox.Model;
+using MinimalApiSandbox.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointDefinitions(typeof(Person)); //AssemblyScan

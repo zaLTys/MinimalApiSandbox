@@ -13,11 +13,11 @@ namespace MinimalApiSandbox.EndpointDefinitions
 
         public void DefineEndpoints(WebApplication app)
         {
-            app.MapGet("/persons", GetAllAsync);
-            app.MapGet("/persons/{id}", GetByIdAsync);
-            app.MapPost("/persons", CreateAsync);
-            app.MapPut("/persons/{id}", UpdateAsync);
-            app.MapDelete("/persons/{id}", DeleteAsync);
+            app.MapGet(PersonsEndpoints.GetAllAsync, GetAllAsync);
+            app.MapGet(PersonsEndpoints.GetByIdAsync, GetByIdAsync);
+            app.MapPost(PersonsEndpoints.CreateAsync, CreateAsync);
+            app.MapPut(PersonsEndpoints.UpdateAsync, UpdateAsync);
+            app.MapDelete(PersonsEndpoints.DeleteAsync, DeleteAsync);
         }
 
         internal async Task<IResult> GetAllAsync(IPersonsRepository repo)

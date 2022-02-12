@@ -15,7 +15,7 @@ namespace MinimalApiSandbox.Helpers
             string json = JsonConvert.SerializeObject(walletJsonData);
             Random random = new Random();
             var fileName =
-                $"EthereumWallet_{ DateTime.Now.Year}-{ DateTime.Now.Month}-{ DateTime.Now.Day}" +
+                $"EthereumWallet_{DateTime.Now.Year}-{DateTime.Now.Month}-{DateTime.Now.Day}" +
                 $"-{ DateTime.Now.Hour}-{ DateTime.Now.Minute}-{ DateTime.Now.Second}" +
                 $"-{ random.Next(0, 1000)}.json";
             File.WriteAllText(Path.Combine(pathfile, fileName), json);

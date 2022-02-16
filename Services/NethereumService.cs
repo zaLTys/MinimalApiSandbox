@@ -2,8 +2,6 @@
 using NBitcoin;
 using Nethereum.HdWallet;
 using Nethereum.Web3;
-using Newtonsoft.Json;
-using Rijndael256;
 
 namespace MinimalApiSandbox.Services
 {
@@ -16,7 +14,7 @@ namespace MinimalApiSandbox.Services
         {
             _path = config.GetSection(AppConfiguration.WorkingDirectory).Value;
             _web3 = new Web3(config.GetSection(AppConfiguration.NetworkUrl).Value);
-            
+
         }
 
         public async Task<string> CreateWalletAsync(string password)
@@ -43,51 +41,42 @@ namespace MinimalApiSandbox.Services
 
         public async Task<Wallet> LoadWalletFromFile(string nameOfWalletFile, string pass)
         {
-            try
-            {
-                FileHelper.CheckDirectory(_path);
-                var wallet = FileHelper.LoadWalletFromJsonFile(nameOfWalletFile, _path, pass);
-                return await Task.FromResult(wallet);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            FileHelper.CheckDirectory(_path);
+            var wallet = FileHelper.LoadWalletFromJsonFile(nameOfWalletFile, _path, pass);
+            return await Task.FromResult(wallet);
         }
 
-        public async Task<Dictionary<string,string>> LoadWordsFromFile(string nameOfWalletFile, string pass)
+        public async Task<Dictionary<string, string>> LoadWordsFromFile(string nameOfWalletFile, string pass)
+        {
+            FileHelper.CheckDirectory(_path);
+            var wallet = FileHelper.LoadWalletFromJsonFile(nameOfWalletFile, _path, pass);
+            var result = new Dictionary<string, string>();
+
+            for (int i = 0; i < 20; i++)
+            {
+                result.Add(
+                    wallet.GetAccount(i).Address,
+                    wallet.GetAccount(i).PrivateKey);
+            }
+            return await Task.FromResult(result);
+        }
+
+        public async Task<string> GetBalanceAsync(string address = "0x948B1Ee102E69A3e7228cD2C7323FB6F87ad43B9") //test
         {
             try
             {
-                FileHelper.CheckDirectory(_path);
-                var wallet = FileHelper.LoadWalletFromJsonFile(nameOfWalletFile, _path, pass);
-                var result = new Dictionary<string, string>();
+                var balance = await _web3.Eth.GetBalance.SendRequestAsync(address);
+                Console.WriteLine($"Balance in Wei: {balance.Value}");
 
-                for (int i = 0; i < 20; i++)
-                {
-                    result.Add(
-                        wallet.GetAccount(i).Address,
-                        wallet.GetAccount(i).PrivateKey);
-                }
-                return await Task.FromResult(result);
+                var etherAmount = Web3.Convert.FromWei(balance.Value);
+                return $"Balance in Ether: {etherAmount}";
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 throw;
             }
 
-        }    
-
-        public async Task<string> GetBalanceAsync() //test
-        {
-            //Todo: update to use Ropsten
-            var web3 = new Web3("https://mainnet.infura.io/v3/7238211010344719ad14a89db874158c");
-            var balance = await web3.Eth.GetBalance.SendRequestAsync("0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae");
-            Console.WriteLine($"Balance in Wei: {balance.Value}");
-
-            var etherAmount = Web3.Convert.FromWei(balance.Value);
-            return $"Balance in Ether: {etherAmount}";
         }
     }
 }

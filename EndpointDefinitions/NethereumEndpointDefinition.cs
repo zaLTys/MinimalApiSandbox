@@ -19,9 +19,9 @@ namespace MinimalApiSandbox.EndpointDefinitions
             app.MapGet(NethereumEndpoints.LoadWords, LoadWordsFromFile);
         }
 
-        internal async Task<IResult> GetBalanceAsync(INethereumService _nethereumService)
+        internal async Task<IResult> GetBalanceAsync(INethereumService _nethereumService, string address)
         {
-            var result = await _nethereumService.GetBalanceAsync();
+            var result = await _nethereumService.GetBalanceAsync(address);
             return Results.Ok(result);
         }
 

@@ -38,7 +38,7 @@ namespace MinimalApiSandbox.EndpointDefinitions
         }
         internal async Task<IResult> LoadWordsFromFile(INethereumService _nethereumService, string nameOfWalletFile, string password)
         {
-            var result = await _nethereumService.LoadWordsFromFile(nameOfWalletFile, password);
+            var result = await _nethereumService.LoadKeysAndBalances(nameOfWalletFile, password);
             return Results.Ok(result);
         }
 

@@ -46,7 +46,7 @@ namespace MinimalApiSandbox.Services
             return await Task.FromResult(wallet);
         }
 
-        public async Task<Dictionary<string, string>> LoadWordsFromFile(string nameOfWalletFile, string pass)
+        public async Task<Dictionary<string, string>> LoadKeysAndBalances(string nameOfWalletFile, string pass)
         {
             FileHelper.CheckDirectory(_path);
             var wallet = FileHelper.LoadWalletFromJsonFile(nameOfWalletFile, _path, pass);
@@ -56,7 +56,7 @@ namespace MinimalApiSandbox.Services
             {
                 result.Add(
                     wallet.GetAccount(i).Address,
-                    wallet.GetAccount(i).PrivateKey);
+                    $"{wallet.GetAccount(i).PrivateKey} {await GetBalanceAsync(wallet.GetAccount(i).Address)}");
             }
             return await Task.FromResult(result);
         }

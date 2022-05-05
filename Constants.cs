@@ -11,7 +11,7 @@
         public const string GetBalance = "/balance";
         public const string CreateWallet = "/createwallet";
         public const string LoadWallet = "/loadwalletfromfile";
-        public const string LoadWords = "/loadwordsfromfile";
+        public const string LoadBalances = "/loadbalances";
     }
 
     public static class PersonsEndpoints

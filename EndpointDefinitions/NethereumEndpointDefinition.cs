@@ -16,7 +16,7 @@ namespace MinimalApiSandbox.EndpointDefinitions
             app.MapGet(NethereumEndpoints.GetBalance, GetBalanceAsync);
             app.MapPost(NethereumEndpoints.CreateWallet, CreateWalletAsync);
             app.MapGet(NethereumEndpoints.LoadWallet, LoadWalletFromFile);
-            app.MapGet(NethereumEndpoints.LoadWords, LoadWordsFromFile);
+            app.MapGet(NethereumEndpoints.LoadBalances, LoadBalancesFromFile);
         }
 
         internal async Task<IResult> GetBalanceAsync(INethereumService _nethereumService, string address)
@@ -36,7 +36,7 @@ namespace MinimalApiSandbox.EndpointDefinitions
             var result = await _nethereumService.LoadWalletFromFile(nameOfWalletFile, password);
             return Results.Ok(result);
         }
-        internal async Task<IResult> LoadWordsFromFile(INethereumService _nethereumService, string nameOfWalletFile, string password)
+        internal async Task<IResult> LoadBalancesFromFile(INethereumService _nethereumService, string nameOfWalletFile, string password)
         {
             var result = await _nethereumService.LoadKeysAndBalances(nameOfWalletFile, password);
             return Results.Ok(result);
